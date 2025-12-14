@@ -33,7 +33,7 @@ const OUTPUT_COLUMNS = [
 
 /**
  * Extract job name from Short description
- * Pattern: Extract text starting with "OMS_" until space or end
+ * Pattern: Extract text starting with "OMS_" that comes after a colon
  * Example: "UAC Job:wf_StormCaster_DEP_OMS_Feed Application:OMS_STORM_CASTER_DEP_OMS_FEED_Sunday..."
  * Result: "OMS_STORM_CASTER_DEP_OMS_FEED"
  */
@@ -42,16 +42,65 @@ function extractJobName(shortDescription) {
         return '';
     }
 
-    // Look for pattern "OMS_" followed by alphanumeric and underscores
-    const pattern = /OMS_[A-Z0-9_]+/i;
-    const match = shortDescription.match(pattern);
+    // Look for pattern: colon followed by optional space, then OMS_ followed by alphanumeric and underscores
+    // This ensures we only catch OMS that comes after a colon (like "Application:OMS_STORM_CASTER...")
+    const pattern = /:\s*OMS_([A-Z0-9_]+)/gi;
+    const matches = Array.from(shortDescription.matchAll(pattern));
     
-    if (match) {
-        return match[0].toUpperCase();
+    if (matches.length === 0) {
+        return '';
     }
 
-    // Fallback: if no match found, return empty string
-    return '';
+    // Find the best match (prefer fully uppercase, longer matches)
+    let bestMatch = null;
+    
+    for (const match of matches) {
+        const matchedText = 'OMS_' + match[1]; // match[1] is the captured group after OMS_
+        
+        // Prefer fully uppercase matches (actual job names are uppercase)
+        if (matchedText === matchedText.toUpperCase()) {
+            if (!bestMatch || matchedText.length > bestMatch.length) {
+                bestMatch = matchedText;
+            }
+        }
+    }
+
+    // If no uppercase match found, use the longest one
+    if (!bestMatch) {
+        bestMatch = matches.reduce((longest, match) => {
+            const matchedText = 'OMS_' + match[1];
+            return matchedText.length > longest.length ? matchedText : longest;
+        }, 'OMS_' + matches[0][1]);
+    }
+
+    // Now trim the match to stop before date-like patterns
+    // Pattern to detect date-like suffixes: _Sunday, _December, -Sunday, etc.
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const dateKeywords = [...daysOfWeek, ...months];
+    
+    // Check if the match contains a date pattern (like _Sunday, -Sunday, _December, etc.)
+    for (const keyword of dateKeywords) {
+        // Look for pattern: underscore or dash followed by the keyword
+        const datePattern = new RegExp(`(_|-)(?:${keyword})`, 'i');
+        const dateMatch = bestMatch.match(datePattern);
+        
+        if (dateMatch && dateMatch.index !== undefined) {
+            // Trim the match to stop before the date pattern
+            bestMatch = bestMatch.substring(0, dateMatch.index);
+            break;
+        }
+        
+        // Also check for year pattern (4 digits)
+        const yearPattern = /(_|-)(\d{4})/;
+        const yearMatch = bestMatch.match(yearPattern);
+        if (yearMatch && yearMatch.index !== undefined) {
+            bestMatch = bestMatch.substring(0, yearMatch.index);
+            break;
+        }
+    }
+
+    return bestMatch.toUpperCase();
 }
 
 /**

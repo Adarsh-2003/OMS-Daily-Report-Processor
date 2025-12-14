@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OMS Daily Report Processor</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <header>
             <h1>OMS Daily Report Processor</h1>
-            <p class="subtitle">Process Duke Energy data for Cognizant</p>
         </header>
 
         <div class="main-content">
@@ -22,7 +22,7 @@
                 
                 <div class="input-group">
                     <label for="filledBy">Filled By:</label>
-                    <input type="text" id="filledBy" placeholder="Enter your name or identifier" class="text-input">
+                    <input type="text" id="filledBy" placeholder="Enter your name" class="text-input">
                 </div>
 
                 <div class="paste-area-container">
@@ -30,8 +30,8 @@
                     <textarea 
                         id="pasteArea" 
                         class="paste-area" 
-                        placeholder="Paste your tabular data here...&#10;&#10;Example format:&#10;Number	Caller	Short description	Priority	State	Assignment group	..."
-                        rows="10"
+                        placeholder="Paste your tabular data here"
+                        rows="8"
                     ></textarea>
                 </div>
 
@@ -41,18 +41,23 @@
             <div class="output-section">
                 <div class="section-header">
                     <h2>Processed Output</h2>
-                    <button id="copyBtn" class="btn-primary" disabled>Copy to Clipboard</button>
+                    <button id="copyBtn" class="btn-copy" disabled>Copy</button>
                 </div>
                 
                 <div id="outputContainer" class="output-container">
                     <div class="placeholder">
-                        <p>Processed data will appear here...</p>
+                        <p>Processed data will appear here</p>
                     </div>
                 </div>
             </div>
         </div>
 
         <div id="notification" class="notification"></div>
+
+        <footer>
+            <p>Made with ❤️ by <a href="https://adarshgupta.works" target="_blank" rel="noopener noreferrer">Adarsh Gupta</a></p>
+            <p class="footer-credit">Vibe coded with Cursor.</p>
+        </footer>
     </div>
 
     <script src="script.js"></script>
