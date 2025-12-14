@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMS Daily Report Processor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>OMS Daily Report Processor</h1>
+            <p class="subtitle">Process Duke Energy data for Cognizant</p>
+        </header>
+
+        <div class="main-content">
+            <div class="input-section">
+                <div class="section-header">
+                    <h2>Input Data</h2>
+                    <button id="clearBtn" class="btn-secondary">Clear</button>
+                </div>
+                
+                <div class="input-group">
+                    <label for="filledBy">Filled By:</label>
+                    <input type="text" id="filledBy" placeholder="Enter your name or identifier" class="text-input">
+                </div>
+
+                <div class="paste-area-container">
+                    <label for="pasteArea">Paste your data here (tab-separated or from Excel):</label>
+                    <textarea 
+                        id="pasteArea" 
+                        class="paste-area" 
+                        placeholder="Paste your tabular data here...&#10;&#10;Example format:&#10;Number	Caller	Short description	Priority	State	Assignment group	..."
+                        rows="10"
+                    ></textarea>
+                </div>
+
+                <button id="processBtn" class="btn-primary">Process Data</button>
+            </div>
+
+            <div class="output-section">
+                <div class="section-header">
+                    <h2>Processed Output</h2>
+                    <button id="copyBtn" class="btn-primary" disabled>Copy to Clipboard</button>
+                </div>
+                
+                <div id="outputContainer" class="output-container">
+                    <div class="placeholder">
+                        <p>Processed data will appear here...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="notification" class="notification"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
